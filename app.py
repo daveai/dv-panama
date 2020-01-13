@@ -356,7 +356,7 @@ html.Div([
                                     min=pp_ts['year'].min(),
                                     max=pp_ts['year'].max(),
                                     value=[pp_ts['year'].min(), pp_ts['year'].max()],
-                                    marks={i: '{}'.format(i) for i in range(int(pp_ts['year'].min()), int(pp_ts['year'].max()))},step=1,
+                                    marks={str(i): '{}'.format(str(i)) for i in [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015]},
                                     allowCross= False
                                 ),
 
@@ -423,7 +423,7 @@ html.Div([
                                             min=pp_ts['year'].min(),
                                             max=pp_ts['year'].max(),
                                             value=[pp_ts['year'].min(), pp_ts['year'].max()],
-                                            marks={i: '{}'.format(i) for i in range(int(pp_ts['year'].min()), int(pp_ts['year'].max()))},        step=1
+                                            marks={str(i): '{}'.format(str(i)) for i in [1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015]}
                                         )
 
                         ], className='slider'),
@@ -494,8 +494,8 @@ def time_series(selected_havens, selected_year):
         traces.append(dict(
             x=filt_df.year,
             y=filt_df[c],
-            text=c,
-            name=c
+            text= c,
+            name= pp.loc[pp['jurisdiction'] == c, 'jurisdiction_description'].drop_duplicates().values[0],
         ))
     
     return {
@@ -567,3 +567,5 @@ def map(selected_country):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
