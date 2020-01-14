@@ -368,9 +368,13 @@ html.Div([
 
     ],className='row'),
 
+    html.Br(),
+
     html.P([
 
     ], className='separator'),
+
+    html.Br(),
 
     html.Div([
 
@@ -526,7 +530,7 @@ def sankey_flow(selected_country, selected_year):
       value = [filt_df[filt_df["jurisdiction"] == x].count()[0] for x in haven_list]
     ))])
 
-    fig.update_layout(title_text="Tax Haven Popularity by Country", font_size=10)
+    fig.update_layout(title_text="Tax Haven Popularity by Country", font_size=12)
 
     return fig
 
@@ -535,15 +539,21 @@ def sankey_flow(selected_country, selected_year):
     [Input("sankey-country", "value")]
 )
 def return_images(selected_country):
+
     if selected_country in img_map:
         img = io.imread(img_map[selected_country])
         fig = px.imshow(img)
         fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
-        return fig
+
     else:
         fig = px.imshow(defaultImg)
         fig.update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
-        return fig
+
+    fig.update_layout(
+        title_text='Key Figures of selected Country',
+        hovermode=False,
+    )
+    return fig
 
 @app.callback(
     Output("map", "figure"),
@@ -554,10 +564,22 @@ def map(selected_country):
     selected_country = filt_df["countries"].unique()[0]
     clist = [[selected_country, x] for x in filt_df["jurisdiction_description"]]
     polyline = [i for sl in clist for i in sl]
-    
+
     fig = px.line_geo(filt_df, locations=polyline,
                     locationmode="country names",
-                    projection="orthographic")
+                    projection="orthographic",
+                    )
+
+    fig.update_layout(
+        title_text='Tax havens of selected country',
+        showlegend=False,
+        geo=go.layout.Geo(
+            scope='world',
+            projection_type='winkel tripel',
+            showland=True,
+            landcolor='rgb(199, 195, 171)',
+            showcountries=True,
+                ),)
 
     return fig
 
